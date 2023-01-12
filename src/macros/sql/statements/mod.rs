@@ -53,7 +53,7 @@ pub enum Statement {
 impl Parse for Statement {
 	fn parse(input: ParseStream) -> Result<Self> {
 		let token: Ident = input.parse()?;
-		match token.to_string().to_uppercase().as_str() {
+		match token.to_string().to_ascii_uppercase().as_str() {
 			"BEGIN" => Ok(Statement::Begin(input.parse()?)),
 			"CANCEL" => Ok(Statement::Cancel(input.parse()?)),
 			"COMMIT" => Ok(Statement::Commit(input.parse()?)),

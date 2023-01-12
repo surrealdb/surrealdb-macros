@@ -15,7 +15,7 @@ impl Parse for Statement {
 		let token: Option<Ident> = input.parse()?;
 		if let Some(token) = token {
 			let expected = "TRANSACTION";
-			if token.to_string().to_uppercase() != expected {
+			if token.to_string().to_ascii_uppercase() != expected {
 				return Err(Error::new_spanned(
 					token,
 					format!("Unknown statement, did you mean `{expected}`?"),
