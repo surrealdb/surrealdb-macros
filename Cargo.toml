@@ -17,6 +17,7 @@ proc-macro = true
 proc-macro2 = "1.0.49"
 quote = "1.0.23"
 syn = { version = "1.0.107", features = ["parsing"] }
+uuid = "1.2.2"
 
 [dev-dependencies]
 surrealdb = { version = "1.0.0-beta.8", default-features = false, features = ["kv-mem"] }
