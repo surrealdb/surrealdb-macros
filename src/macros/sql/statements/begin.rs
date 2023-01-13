@@ -16,10 +16,8 @@ impl Parse for Statement {
 		if let Some(token) = token {
 			let expected = "TRANSACTION";
 			if token.to_string().to_ascii_uppercase() != expected {
-				return Err(Error::new_spanned(
-					token,
-					format!("Unknown statement, did you mean `{expected}`?"),
-				));
+				let message = format!("expected `{expected}`, found `{token}`");
+				return Err(Error::new_spanned(token, message));
 			}
 		}
 		Ok(Self)
