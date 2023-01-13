@@ -19,8 +19,9 @@ pub enum Statement {
 impl Parse for Statement {
 	fn parse(input: ParseStream) -> Result<Self> {
 		let token: Ident = input.parse()?;
-		if token.to_string().to_ascii_uppercase().as_str() != "FOR" {
-			let message = format!("Unknown statement `{token}`, did you mean `FOR`?");
+		let expected = "FOR";
+		if token.to_string().to_ascii_uppercase().as_str() != expected {
+			let message = format!("expected `{expected}`, found `{token}`");
 			return Err(Error::new_spanned(token, message));
 		}
 		let token: Ident = input.parse()?;
@@ -37,7 +38,7 @@ impl Parse for Statement {
 				Ok(Self::Tb(token.to_string()))
 			}
 			_ => {
-				let message = format!("Unknown statement `{token}`, did you mean `KV`, `NAMESPACE`, `NS`, `DATABASE`, `DB`, `SCOPE`, `SC`, `TABLE` or `TB`?");
+				let message = format!("expected one of `KV`, `NAMESPACE`, `NS`, `DATABASE`, `DB`, `SCOPE`, `SC`, `TABLE` or `TB`, found `{token}`");
 				Err(Error::new_spanned(token, message))
 			}
 		}

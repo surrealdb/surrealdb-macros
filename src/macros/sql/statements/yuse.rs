@@ -30,9 +30,7 @@ impl Parse for Statement {
 							statement.db = input.parse::<Ident>()?.to_string();
 						}
 						_ => {
-							let message = format!(
-								"Unknown statement `{token}`, did you mean `DB` or `DATABASE`?"
-							);
+							let message = format!("expected `DATABASE` or `DB`, found `{token}`");
 							return Err(Error::new_spanned(token, message));
 						}
 					}
@@ -42,7 +40,9 @@ impl Parse for Statement {
 				statement.db = input.parse::<Ident>()?.to_string();
 			}
 			_ => {
-				let message = format!("Unknown statement `{token}`, did you mean `NS` or `DB`?");
+				let message = format!(
+					"expected one of `NAMESPACE, `NS`, `DATABASE` or `DB`, found `{token}`"
+				);
 				return Err(Error::new_spanned(token, message));
 			}
 		}

@@ -73,7 +73,10 @@ impl Parse for Statement {
 			"SET" => Ok(Statement::Set(input.parse()?)),
 			"UPDATE" => Ok(Statement::Update(input.parse()?)),
 			"USE" => Ok(Statement::Use(input.parse()?)),
-			_ => Err(Error::new_spanned(token, "Unknown SQL statement")),
+			_ => {
+				let message = format!("expected one of `BEGIN`, `CANCEL`, `COMMIT`, `CREATE`, `DEFINE`, `DELETE`, `IF`, `INFO`, `INSERT`, `KILL`, `LIVE`, `OPTION`, `OUTPUT`, `RELATE`, `REMOVE`, `SELECT`, `SET`, `UPDATE` or `USE`, found `{token}`");
+				Err(Error::new_spanned(token, message))
+			}
 		}
 	}
 }
