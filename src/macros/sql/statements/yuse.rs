@@ -20,12 +20,12 @@ impl Parse for Statement {
 			db: String::new(),
 		};
 		let token: Ident = input.parse()?;
-		match token.to_string().to_ascii_uppercase().as_str() {
+		match uppercase!(token).as_str() {
 			"NAMESPACE" | "NS" => {
 				statement.ns = input.parse::<Ident>()?.to_string();
 				let token: Option<Ident> = input.parse()?;
 				if let Some(token) = token {
-					match token.to_string().to_ascii_uppercase().as_str() {
+					match uppercase!(token).as_str() {
 						"DATABASE" | "DB" => {
 							statement.db = input.parse::<Ident>()?.to_string();
 						}

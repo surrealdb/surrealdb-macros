@@ -20,12 +20,12 @@ impl Parse for Statement {
 	fn parse(input: ParseStream) -> Result<Self> {
 		let token: Ident = input.parse()?;
 		let expected = "FOR";
-		if token.to_string().to_ascii_uppercase().as_str() != expected {
+		if uppercase!(token).as_str() != expected {
 			let message = format!("expected `{expected}`, found `{token}`");
 			return Err(Error::new_spanned(token, message));
 		}
 		let token: Ident = input.parse()?;
-		match token.to_string().to_ascii_uppercase().as_str() {
+		match uppercase!(token).as_str() {
 			"KV" => Ok(Self::Kv),
 			"NAMESPACE" | "NS" => Ok(Self::Ns),
 			"DATABASE" | "DB" => Ok(Self::Db),

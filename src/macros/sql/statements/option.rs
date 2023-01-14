@@ -22,7 +22,7 @@ impl Parse for Statement {
             return Ok(Self { name, what: true });
         };
 		let token: Ident = input.parse()?;
-		match token.to_string().to_ascii_uppercase().as_str() {
+		match uppercase!(token).as_str() {
 			"TRUE" => Ok(Self {
 				name,
 				what: true,

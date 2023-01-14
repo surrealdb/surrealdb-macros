@@ -1,5 +1,6 @@
 extern crate proc_macro;
 
+#[macro_use]
 mod macros;
 
 use proc_macro::TokenStream;
