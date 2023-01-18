@@ -11,7 +11,7 @@ use proc_macro::TokenStream;
 ///
 /// ```no_run
 /// # use surrealdb_macros::sql;
-/// let query = sql!(BEGIN TRANSACTION);
+/// let query = sql!(REMOVE FIELD bar ON TABLE foo);
 /// ```
 #[proc_macro]
 pub fn sql(input: TokenStream) -> TokenStream {
