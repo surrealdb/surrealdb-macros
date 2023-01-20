@@ -9,25 +9,25 @@ use syn::Error;
 use syn::Ident;
 
 pub struct Statement {
-	ns: String,
-	db: String,
+	ns: Option<Ident>,
+	db: Option<Ident>,
 }
 
 impl Parse for Statement {
 	fn parse(input: ParseStream) -> Result<Self> {
 		let mut statement = Statement {
-			ns: String::new(),
-			db: String::new(),
+			ns: None,
+			db: None,
 		};
 		let token: Ident = input.parse()?;
 		match uppercase!(token).as_str() {
 			"NAMESPACE" | "NS" => {
-				statement.ns = input.parse::<Ident>()?.to_string();
+				statement.ns = Some(input.parse()?);
 				let token: Option<Ident> = input.parse()?;
 				if let Some(token) = token {
 					match uppercase!(token).as_str() {
 						"DATABASE" | "DB" => {
-							statement.db = input.parse::<Ident>()?.to_string();
+							statement.db = Some(input.parse()?);
 						}
 						_ => {
 							let message = format!("expected `DATABASE` or `DB`, found `{token}`");
@@ -37,7 +37,7 @@ impl Parse for Statement {
 				}
 			}
 			"DATABASE" | "DB" => {
-				statement.db = input.parse::<Ident>()?.to_string();
+				statement.db = Some(input.parse()?);
 			}
 			_ => {
 				let message = format!(
@@ -52,19 +52,19 @@ impl Parse for Statement {
 
 impl ToTokens for Statement {
 	fn to_tokens(&self, tokens: &mut TokenStream) {
-		let Statement {
-			ns,
-			db,
-		} = self;
-		let namespace = if ns.is_empty() {
-			quote!(None)
-		} else {
-			quote!(Some(#ns.to_owned()))
+		let namespace = match &self.ns {
+			Some(ns) => {
+				let ns = ns.to_string();
+				quote!(Some(#ns.to_owned()))
+			}
+			None => quote!(None),
 		};
-		let database = if db.is_empty() {
-			quote!(None)
-		} else {
-			quote!(Some(#db.to_owned()))
+		let database = match &self.db {
+			Some(db) => {
+				let db = db.to_string();
+				quote!(Some(#db.to_owned()))
+			}
+			None => quote!(None),
 		};
 		tokens.append_all(quote!(UseStatement {
 			ns: #namespace,
