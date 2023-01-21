@@ -1,3 +1,4 @@
+use crate::macros::sql::kw;
 use proc_macro2::TokenStream;
 use quote::quote;
 use quote::ToTokens;
@@ -5,27 +6,27 @@ use quote::TokenStreamExt;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::parse::Result;
-use syn::Error;
 use syn::Ident;
 
-pub struct Statement;
+pub struct Statement {
+	_transaction: Option<kw::Transaction>,
+}
 
 impl Parse for Statement {
 	fn parse(input: ParseStream) -> Result<Self> {
 		let token: Option<Ident> = input.parse()?;
-		if let Some(token) = token {
-			let expected = "TRANSACTION";
-			if uppercase!(token) != expected {
-				let message = format!("expected `{expected}`, found `{token}`");
-				return Err(Error::new_spanned(token, message));
-			}
-		}
-		Ok(Self)
+		let _transaction = match token {
+			Some(token) => Some(token.try_into()?),
+			None => None,
+		};
+		Ok(Self {
+			_transaction,
+		})
 	}
 }
 
 impl ToTokens for Statement {
 	fn to_tokens(&self, tokens: &mut TokenStream) {
-		tokens.append_all(quote!(CommitStatement));
+		tokens.append_all(quote!(CancelStatement));
 	}
 }

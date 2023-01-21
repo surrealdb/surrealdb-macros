@@ -10,38 +10,37 @@ use syn::Ident;
 use syn::Token;
 
 pub struct Statement {
-	name: String,
+	name: Ident,
+	_equal: Option<Token![=]>,
 	what: bool,
 }
 
 impl Parse for Statement {
 	fn parse(input: ParseStream) -> Result<Self> {
-		let token: Ident = input.parse()?;
-		let name = token.to_string();
-		let Some(_): Option<Token![=]> = input.parse()? else {
-            return Ok(Self { name, what: true });
+		let name = input.parse()?;
+		let Some(_equal) = input.parse()? else {
+            return Ok(Self { name, _equal: None, what: true });
         };
 		let token: Ident = input.parse()?;
-		match uppercase!(token).as_str() {
-			"TRUE" => Ok(Self {
-				name,
-				what: true,
-			}),
-			"FALSE" => Ok(Self {
-				name,
-				what: false,
-			}),
+		let what = match uppercase!(token).as_str() {
+			"TRUE" => true,
+			"FALSE" => false,
 			_ => {
 				let message = format!("expected `TRUE` or `FALSE`, found `{token}`");
-				Err(Error::new_spanned(token, message))
+				return Err(Error::new_spanned(token, message));
 			}
-		}
+		};
+		Ok(Self {
+			name,
+			what,
+			_equal: Some(_equal),
+		})
 	}
 }
 
 impl ToTokens for Statement {
 	fn to_tokens(&self, tokens: &mut TokenStream) {
-		let name = &self.name;
+		let name = &self.name.to_string();
 		let what = self.what;
 		tokens.append_all(quote!(OptionStatement {
 			name: #name.to_owned().into(),

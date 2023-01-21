@@ -11,26 +11,28 @@ use syn::punctuated::Punctuated;
 use syn::Error;
 use syn::Token;
 
-pub(super) struct Query(Vec<Statement>);
+pub(super) struct Query {
+	statements: Punctuated<Statement, Token![;]>,
+}
 
 impl Parse for Query {
 	fn parse(input: ParseStream) -> Result<Self> {
 		if input.is_empty() {
 			return Err(Error::new(Span::call_site(), "expected SQL code"));
 		}
-		let statements = Punctuated::<Statement, Token![;]>::parse_terminated(input)?;
-		Ok(Query(statements.into_iter().collect()))
+		Ok(Query {
+			statements: input.parse_terminated(Statement::parse)?,
+		})
 	}
 }
 
 impl ToTokens for Query {
 	fn to_tokens(&self, tokens: &mut TokenStream) {
-		let Query(vec) = self;
-		let len = vec.len();
+		let len = self.statements.len();
 		let mut statements = quote! {
 			let mut statements = Vec::with_capacity(#len);
 		};
-		for statement in vec {
+		for statement in &self.statements {
 			statements.append_all(quote! {
 				statements.push(#statement);
 			});
