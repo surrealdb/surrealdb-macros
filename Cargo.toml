@@ -14,9 +14,9 @@ license = "MIT"
 proc-macro = true
 
 [dependencies]
-bigdecimal = "0.4"
 proc-macro2 = { version = "1" }
 quote = "1"
+rust_decimal = "1"
 syn = { version = "1", features = ["parsing"] }
 uuid = "1"
 

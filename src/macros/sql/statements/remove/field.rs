@@ -1,9 +1,9 @@
 use crate::macros::sql::kw;
-use bigdecimal::BigDecimal;
 use proc_macro2::TokenStream;
 use quote::quote;
 use quote::ToTokens;
 use quote::TokenStreamExt;
+use rust_decimal::Decimal;
 use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::parse::Result;
@@ -28,7 +28,7 @@ impl Parse for Number {
 			let token: LitInt = input.parse()?;
 			let Ok(value) = token.base10_parse::<i64>() else {
 				let string = token.to_string();
-				if string.parse::<BigDecimal>().is_err() {
+				if string.parse::<Decimal>().is_err() {
 					let message = format!("expected an integer, found `{token}`");
 					return Err(Error::new_spanned(token, message));
 				}
@@ -39,7 +39,7 @@ impl Parse for Number {
 			let token: LitFloat = input.parse()?;
 			let Ok(value) = token.base10_parse::<f64>() else {
 				let string = token.to_string();
-				if string.parse::<BigDecimal>().is_err() {
+				if string.parse::<Decimal>().is_err() {
 					let message = format!("expected a float, found `{token}`");
 					return Err(Error::new_spanned(token, message));
 				}
