@@ -6,14 +6,17 @@ use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::parse::Result;
 use syn::Ident;
+use syn::Token;
 
 pub struct Statement {
+	_dollar_token: Token![$],
 	name: Ident,
 }
 
 impl Parse for Statement {
 	fn parse(input: ParseStream) -> Result<Self> {
 		Ok(Self {
+			_dollar_token: input.parse()?,
 			name: input.parse()?,
 		})
 	}

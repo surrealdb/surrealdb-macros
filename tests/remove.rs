@@ -16,9 +16,9 @@ fn remove_database() {
 }
 
 #[test]
-fn remove_login() {
-	let query = sql!(REMOVE LOGIN name ON NAMESPACE);
-	let expected = parse("REMOVE LOGIN name ON NAMESPACE").unwrap();
+fn remove_user() {
+	let query = sql!(REMOVE USER name ON NAMESPACE);
+	let expected = parse("REMOVE USER name ON NAMESPACE").unwrap();
 	assert_eq!(query, expected);
 }
 
@@ -36,14 +36,12 @@ fn remove_scope() {
 	assert_eq!(query, expected);
 }
 
-/* Not available on beta.8
 #[test]
 fn remove_param() {
-	let query = sql!(REMOVE PARAM name);
-	let expected = parse("REMOVE PARAM name").unwrap();
+	let query = sql!(REMOVE PARAM $name);
+	let expected = parse("REMOVE PARAM $name").unwrap();
 	assert_eq!(query, expected);
 }
-*/
 
 #[test]
 fn remove_table() {

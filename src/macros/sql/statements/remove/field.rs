@@ -27,23 +27,23 @@ impl Parse for Number {
 		if input.peek(LitInt) {
 			let token: LitInt = input.parse()?;
 			let Ok(value) = token.base10_parse::<i64>() else {
-                let string = token.to_string();
-                if string.parse::<BigDecimal>().is_err() {
-                    let message = format!("expected an integer, found `{token}`");
-                    return Err(Error::new_spanned(token, message));
-                }
-                return Ok(Number::Decimal(string));
-            };
+				let string = token.to_string();
+				if string.parse::<BigDecimal>().is_err() {
+					let message = format!("expected an integer, found `{token}`");
+					return Err(Error::new_spanned(token, message));
+				}
+				return Ok(Number::Decimal(string));
+			};
 			Ok(Number::Int(value))
 		} else if input.peek(LitFloat) {
 			let token: LitFloat = input.parse()?;
 			let Ok(value) = token.base10_parse::<f64>() else {
-                let string = token.to_string();
-                if string.parse::<BigDecimal>().is_err() {
-                    let message = format!("expected a float, found `{token}`");
-                    return Err(Error::new_spanned(token, message));
-                }
-                return Ok(Number::Decimal(string));
+				let string = token.to_string();
+				if string.parse::<BigDecimal>().is_err() {
+					let message = format!("expected a float, found `{token}`");
+					return Err(Error::new_spanned(token, message));
+				}
+				return Ok(Number::Decimal(string));
 			};
 			Ok(Number::Float(value))
 		} else {

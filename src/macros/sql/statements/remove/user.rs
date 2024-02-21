@@ -29,7 +29,7 @@ impl ToTokens for Statement {
 	fn to_tokens(&self, tokens: &mut TokenStream) {
 		let name = self.name.to_string();
 		let base = &self.base;
-		tokens.append_all(quote!(RemoveLoginStatement {
+		tokens.append_all(quote!(RemoveUserStatement {
 			name: #name.to_owned().into(),
 			base: #base,
 		}));
