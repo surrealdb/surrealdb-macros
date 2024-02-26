@@ -31,7 +31,7 @@ impl ToTokens for Statement {
 	fn to_tokens(&self, tokens: &mut TokenStream) {
 		let id = self.id.value();
 		tokens.append_all(quote!(KillStatement {
-			id: #id.into(),
+			id: Uuid(#id.parse().unwrap()).into(),
 		}));
 	}
 }

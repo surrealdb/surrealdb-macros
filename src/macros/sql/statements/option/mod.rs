@@ -19,8 +19,12 @@ impl Parse for Statement {
 	fn parse(input: ParseStream) -> Result<Self> {
 		let name = input.parse()?;
 		let Some(_equal) = input.parse()? else {
-            return Ok(Self { name, _equal: None, what: true });
-        };
+			return Ok(Self {
+				name,
+				_equal: None,
+				what: true,
+			});
+		};
 		let token: Ident = input.parse()?;
 		let what = match uppercase!(token).as_str() {
 			"TRUE" => true,

@@ -2,12 +2,12 @@ mod database;
 mod event;
 mod field;
 mod index;
-mod login;
 mod namespace;
 mod param;
 mod scope;
 mod table;
 mod token;
+mod user;
 
 use proc_macro2::TokenStream;
 use quote::quote;
@@ -51,7 +51,7 @@ impl ToTokens for Base {
 pub enum Statement {
 	Namespace(namespace::Statement),
 	Database(database::Statement),
-	Login(login::Statement),
+	User(user::Statement),
 	Token(token::Statement),
 	Scope(scope::Statement),
 	Param(param::Statement),
@@ -67,7 +67,7 @@ impl Parse for Statement {
 		match uppercase!(token).as_str() {
 			"NAMESPACE" | "NS" => Ok(Statement::Namespace(input.parse()?)),
 			"DATABASE" | "DB" => Ok(Statement::Database(input.parse()?)),
-			"LOGIN" => Ok(Statement::Login(input.parse()?)),
+			"USER" => Ok(Statement::User(input.parse()?)),
 			"TOKEN" => Ok(Statement::Token(input.parse()?)),
 			"SCOPE" => Ok(Statement::Scope(input.parse()?)),
 			"PARAM" => Ok(Statement::Param(input.parse()?)),
@@ -76,7 +76,7 @@ impl Parse for Statement {
 			"FIELD" => Ok(Statement::Field(input.parse()?)),
 			"INDEX" => Ok(Statement::Index(input.parse()?)),
 			_ => {
-				let message = format!("expected one of `NAMESPACE`, `NS`, `DATABASE`, `DB`, `LOGIN`, `TOKEN`, `SCOPE`, `PARAM`, `TABLE`, `EVENT`, `FIELD`, `INDEX`, found `{token}`");
+				let message = format!("expected one of `NAMESPACE`, `NS`, `DATABASE`, `DB`, `USER`, `TOKEN`, `SCOPE`, `PARAM`, `TABLE`, `EVENT`, `FIELD`, `INDEX`, found `{token}`");
 				Err(Error::new_spanned(token, message))
 			}
 		}
@@ -89,7 +89,7 @@ impl ToTokens for Statement {
         match self {
             Statement::Namespace(statement) => tokens.append_all(quote!(RemoveStatement::Namespace(#statement))),
             Statement::Database(statement) => tokens.append_all(quote!(RemoveStatement::Database(#statement))),
-            Statement::Login(statement) => tokens.append_all(quote!(RemoveStatement::Login(#statement))),
+            Statement::User(statement) => tokens.append_all(quote!(RemoveStatement::User(#statement))),
             Statement::Token(statement) => tokens.append_all(quote!(RemoveStatement::Token(#statement))),
             Statement::Scope(statement) => tokens.append_all(quote!(RemoveStatement::Scope(#statement))),
             Statement::Param(statement) => tokens.append_all(quote!(RemoveStatement::Param(#statement))),
